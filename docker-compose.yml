@@ -1,0 +1,41 @@
+services:
+  minio:
+    networks:
+      - shop_net
+    image:
+      minio/minio:latest
+    container_name:
+      minio
+    command:
+      server /data --console-address ":9001"
+    env_file:
+      - .env
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+  shop_file_storage_service:
+    networks:
+      - shop_net
+    build:
+      context:
+        .
+    container_name:
+      shop_file_storage_service
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+    depends_on:
+      - minio
+    ports:
+      - "8001:8001"
+volumes:
+  minio_data:
+networks:
+  shop_net:
+    external: true
