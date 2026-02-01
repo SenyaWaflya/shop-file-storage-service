@@ -25,9 +25,7 @@ minio_client = _session.client(
 def init_bucket() -> None:
     try:
         minio_client.head_bucket(Bucket=settings.MINIO_BUCKET)
-        minio_client.head_bucket(Bucket=settings.MINIO_ADMIN_BUCKET)
     except ClientError as e:
         error_code = int(e.response['Error']['Code'])
         if error_code == status.HTTP_404_NOT_FOUND:
             minio_client.create_bucket(Bucket=settings.MINIO_BUCKET)
-            minio_client.create_bucket(Bucket=settings.MINIO_ADMIN_BUCKET)

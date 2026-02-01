@@ -12,7 +12,7 @@ class FilesService:
         file_path = await run_in_threadpool(StorageService.upload, file=file, bot_id=bot_id, user_id=user_id)
         if not file_path:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="File wasn't upload")
-        return FilePath(path=file_path)
+        return FilePath(file_path=file_path)
 
     @staticmethod
     async def get(image_path: str) -> StreamingResponse:
